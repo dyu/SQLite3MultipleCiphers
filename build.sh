@@ -18,11 +18,17 @@ fi
 # change pwd
 cd $SCRIPT_DIR
 
-mkdir target || { echo 'Remove target/ dir to proceed with build.'; exit 1; }
+CODEC_TYPE=AES256
+[ -n "$1" ] && CODEC_TYPE=$1
 
-cd target && \
+OUT_DIR="target/$CODEC_TYPE"
+mkdir -p target
+
+mkdir $OUT_DIR || { echo "Remove $OUT_DIR/ dir to proceed with build."; exit 1; }
+
+cd $OUT_DIR && \
 cmake -GNinja \
 -DCMAKE_BUILD_TYPE=Release \
 -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
--DCODEC_TYPE=AES256 .. && \
+-DCODEC_TYPE=$CODEC_TYPE ../.. && \
 ninja
